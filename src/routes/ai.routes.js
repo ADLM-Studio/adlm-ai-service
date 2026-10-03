@@ -6,6 +6,7 @@ import { detectOutliers } from "../services/outlierService.js";
 import { catalogueExtract } from "../services/catalogueService.js";
 import { takeoffCommand } from "../services/takeoffCommandService.js";
 import { budgetMatch } from "../services/budgetMatchService.js";
+import { billMatch } from "../services/billMatchService.js";
 import { billCleanup } from "../services/billCleanupService.js";
 import { breakdownFill } from "../services/breakdownFillService.js";
 import { boqFill } from "../services/boqFillService.js";
@@ -132,6 +133,21 @@ router.post("/budget-match", async (req, res, next) => {
       return res.status(400).json({ error: "rows[] and candidates[] are required", code: "BAD_INPUT" });
     }
     res.json(await budgetMatch({ tenantId: req.tenantId, product: req.product, rows, candidates }));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Bill match: a client's bill items against the user's own all-in rates (RateGen's
+// "Price a bill"). Same contract as /budget-match: the model only picks candidate
+// ids, units are enforced here, and doubtful rows come back unmatched.
+router.post("/bill-match", async (req, res, next) => {
+  try {
+    const { rows, candidates } = req.body || {};
+    if (!Array.isArray(rows) || !rows.length || !Array.isArray(candidates) || !candidates.length) {
+      return res.status(400).json({ error: "rows[] and candidates[] are required", code: "BAD_INPUT" });
+    }
+    res.json(await billMatch({ tenantId: req.tenantId, product: req.product, rows, candidates }));
   } catch (err) {
     next(err);
   }

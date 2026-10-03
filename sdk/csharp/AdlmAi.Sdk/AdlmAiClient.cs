@@ -98,6 +98,20 @@ namespace AdlmAi
                 progress, ct);
         }
 
+        /// <summary>
+        /// Prices a client's bill: each item matched to one of the caller's rates, same unit only.
+        /// Up to 120 rows and 400 candidates per call. Same result shape as BudgetMatchAsync.
+        /// </summary>
+        public Task<AiResult<BudgetMatchResult>> BillMatchAsync(
+            IEnumerable<BillMatchRow> rows, IEnumerable<BillMatchCandidate> candidates,
+            IProgress<string> progress = null, CancellationToken ct = default)
+        {
+            return PostAsync<BudgetMatchResult>(
+                "/api/ai/bill-match",
+                new Dictionary<string, object> { { "rows", rows }, { "candidates", candidates } },
+                progress, ct);
+        }
+
         public Task<AiResult<BudgetMatchResult>> BudgetMatchAsync(
             IEnumerable<BudgetMatchRow> rows, IEnumerable<BudgetMatchCandidate> candidates,
             IProgress<string> progress = null, CancellationToken ct = default)

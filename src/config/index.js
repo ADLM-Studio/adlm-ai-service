@@ -79,6 +79,8 @@ export const config = {
     catalogueExtract: 5,
     takeoffCommand: 1,
     budgetMatch: 1,
+    // One call prices up to 120 bill items; a 300-line bill is three calls.
+    billMatch: 1,
     // Batches across the whole bill and can escalate a batch, so it costs more
     // than a single-shot feature.
     billCleanup: 2,
