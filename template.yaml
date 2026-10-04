@@ -6,7 +6,7 @@ Globals:
   Function:
     Timeout: 120
     MemorySize: 1024
-    Runtime: nodejs20.x
+    Runtime: nodejs24.x
   # One line per request in ApiAccessLog: route, status, timing and the gateway's
   # own error, so a refused call (401 expired sign-in, 403 no active subscription,
   # 400 bad input) can be told apart. No IP address or user agent is logged.
