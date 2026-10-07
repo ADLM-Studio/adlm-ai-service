@@ -68,6 +68,18 @@ namespace AdlmAi
             return PostAsync<RateBuildup>("/api/ai/rate-buildup", body, progress, ct);
         }
 
+        /// <summary>
+        /// The shape this had before a library could be sent. Kept so callers
+        /// that pass (description, zone, unit, progress, ct) positionally, such
+        /// as the ServiQ (MEP) plugin, keep compiling and behave identically.
+        /// </summary>
+        public Task<AiResult<RateBuildup>> RateBuildupAsync(
+            string description, string zone, string unit,
+            IProgress<string> progress, CancellationToken ct = default)
+        {
+            return RateBuildupAsync(description, zone, unit, null, progress, ct);
+        }
+
         public Task<AiResult<BoqCheckResult>> BoqCheckAsync(
             IEnumerable<BoqItem> items, string zone = null,
             IProgress<string> progress = null, CancellationToken ct = default)
