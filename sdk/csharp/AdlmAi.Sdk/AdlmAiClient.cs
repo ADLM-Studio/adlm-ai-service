@@ -295,8 +295,19 @@ namespace AdlmAi
             }
 
             if (status == HttpStatusCode.Forbidden)
+            {
+                // The server says why: with AI_ACCESS_MODE "any-subscription" (the
+                // default) it is "No active ADLM subscription on this account", in
+                // add-on mode "AI add-on not active for this account". Repeat that
+                // rather than guess, so the plugin never contradicts the service.
+                // The add-on has no shop page of its own (ADLM switches it on per
+                // account), so point at the plans and at support for both cases.
+                var reason = ExtractServerMessage(text, "error")
+                             ?? "This account does not have AI access";
                 return AiResult<T>.Of(AiStatus.NotEntitled,
-                    "AI add-on not active for this account. Available on adlmnigeria.com.");
+                    reason.TrimEnd('.') + ". Buy or renew a plan at www.adlmstudio.net/products, "
+                    + "or ask us to switch AI on at www.adlmstudio.net/support.");
+            }
             if (status == HttpStatusCode.Unauthorized)
                 return AiResult<T>.Of(AiStatus.NotEntitled, "Sign in again to use AI features.");
             if (status == HttpStatusCode.BadRequest)
@@ -330,15 +341,19 @@ namespace AdlmAi
         /// Pulls the service's own "message" out of an error body. The server phrases
         /// these for a person to act on (which model, and where to grant access), so
         /// repeating it beats inventing a vaguer one here. Null when absent/unparseable.
+        /// `field` names a different property: the auth middleware's 403 puts its
+        /// sentence in "error".
         /// </summary>
-        private static string ExtractServerMessage(string text)
+        private static string ExtractServerMessage(string text, string field = "message")
         {
             if (string.IsNullOrWhiteSpace(text)) return null;
             try
             {
                 using (var doc = JsonDocument.Parse(text))
                 {
-                    if (doc.RootElement.TryGetProperty("message", out var m))
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object
+                        && doc.RootElement.TryGetProperty(field, out var m)
+                        && m.ValueKind == JsonValueKind.String)
                     {
                         var s = m.GetString();
                         return string.IsNullOrWhiteSpace(s) ? null : s;
