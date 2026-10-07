@@ -193,6 +193,27 @@ namespace AdlmAi
         [JsonPropertyName("rate")] public double Rate { get; set; }
     }
 
+    /// <summary>A bill item for /bill-match, with the section and headings it sits under.</summary>
+    public sealed class BillMatchRow
+    {
+        [JsonPropertyName("id")] public string Id { get; set; }
+        [JsonPropertyName("description")] public string Description { get; set; }
+        [JsonPropertyName("unit")] public string Unit { get; set; }
+        [JsonPropertyName("section")] public string Section { get; set; }
+        [JsonPropertyName("headings")] public List<string> Headings { get; set; }
+        [JsonPropertyName("continuesFrom")] public string ContinuesFrom { get; set; }
+    }
+
+    /// <summary>One of the user's all-in rates offered to /bill-match.</summary>
+    public sealed class BillMatchCandidate
+    {
+        [JsonPropertyName("id")] public string Id { get; set; }
+        [JsonPropertyName("name")] public string Name { get; set; }
+        [JsonPropertyName("unit")] public string Unit { get; set; }
+        [JsonPropertyName("trade")] public string Trade { get; set; }
+        [JsonPropertyName("rate")] public double Rate { get; set; }
+    }
+
     public sealed class BudgetMatchResult
     {
         [JsonPropertyName("matches")] public List<BudgetMatch> Matches { get; set; }
