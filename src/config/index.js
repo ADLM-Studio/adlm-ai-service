@@ -41,7 +41,7 @@ export const config = {
     strong: process.env.BEDROCK_MODEL_STRONG || "us.anthropic.claude-sonnet-4-6",
   },
 
-  adlmCloudUrl: process.env.ADLM_CLOUD_URL || "https://adlmweb.onrender.com",
+  adlmCloudUrl: process.env.ADLM_CLOUD_URL || "https://api.adlmstudio.net",
   jwtLicenseSecret: process.env.JWT_LICENSE_SECRET || "",
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET || "",
   aiEntitlementKey: (process.env.AI_ENTITLEMENT_KEY || "ai").toLowerCase(),
